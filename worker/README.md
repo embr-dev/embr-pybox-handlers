@@ -23,14 +23,31 @@ CLI でも同じ bootstrap を呼べます。 See [docs/dev-phase3.md](../docs/d
 # Any python3 is fine (Flame's python also works to launch bootstrap)
 python3 worker/embr_ml/bootstrap.py \
   --repo-root /path/to/embr-pybox-handlers \
-  --ml-root "$HOME/embr-ml"
+  --ml-root "$HOME/Embr/ml"
 ```
 
-Or step by step:
+Bootstrap は **numpy / Pillow / OpenEXR** まで入れます（HUD・prepare・publish 用）。
+
+MatAnyone2 推論は別途:
 
 ```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
 cd /path/to/embr-pybox-handlers/worker
+uv pip install torch torchvision   # CUDA 環境に合わせて
+# 推奨: ローカル clone
+uv pip install -e "$HOME/Embr/ml/src/MatAnyone2"
+# または:
+# uv pip install "matanyone2 @ git+https://github.com/pq-yang/MatAnyone2.git"
+```
+
+### 既存 venv が空のとき（今回の `No module named numpy`）
+
+```bash
+cd ~/Embr/repos/embr-pybox-handlers/worker
+# Embr の uv があればそれを使う
+~/Embr/bin/uv pip install -e .
+# 確認
+.venv/bin/python -c "import numpy, PIL, OpenEXR; print('ok')"
+```cd /path/to/embr-pybox-handlers/worker
 uv venv --python 3.10
 uv pip install -e .
 export EMBR_ML_ROOT="${EMBR_ML_ROOT:-$HOME/embr-ml}"

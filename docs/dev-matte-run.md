@@ -7,7 +7,14 @@ Front + ガイド Matte → 裏で `process-job` → Result=`fgr` / OutMatte=`ph
 
 `handlers/embr_matte.py`
 
-前提: embr-python-scripts の **Install** 済み（`~/Embr` + `worker/.venv`）。
+前提: embr-python-scripts の **Install** 済み（`~/Embr` + `worker/.venv` + **numpy/Pillow/OpenEXR**）。
+
+`run.log` に `No module named 'numpy'` が出る場合は venv が空です:
+
+```bash
+cd ~/Embr/repos/embr-pybox-handlers/worker
+~/Embr/bin/uv pip install -e .
+```
 
 ## Batch 手順
 

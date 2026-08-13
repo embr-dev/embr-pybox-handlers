@@ -412,6 +412,29 @@ class EmbrMatte(pybox.BaseClass):
     def _worker_python(self):
         return os.path.join(self._repo_root(), "worker", ".venv", "bin", "python")
 
+    def _check_worker_media(self, python):
+        """Return error snippet if numpy/Pillow/OpenEXR missing, else None."""
+        try:
+            proc = subprocess.run(
+                [
+                    python,
+                    "-c",
+                    "import numpy, PIL, OpenEXR",
+                ],
+                env=self._worker_env(),
+                cwd=os.path.join(self._repo_root(), "worker"),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                universal_newlines=True,
+                timeout=30,
+            )
+        except Exception as exc:
+            return str(exc)
+        if proc.returncode != 0:
+            text = (proc.stdout or "").strip().splitlines()
+            return text[-1] if text else "import failed"
+        return None
+
     def _action_log(self, message):
         """Append diagnostics even when Flame Message Console is ignored."""
         job = self._job_dir()
@@ -695,6 +718,20 @@ class EmbrMatte(pybox.BaseClass):
                 "Embr Matte: missing mask. Capture Guide Matte on the first recorded frame."
             )
             self._action_log(tip)
+            self.set_error_msg(tip)
+            return
+
+        media_err = self._check_worker_media(python)
+        if media_err:
+            tip = (
+                "Embr Matte: worker media deps missing ({0}).\n"
+                "On the Linux box run:\n"
+                "  cd {1}/worker && uv pip install -e .\n"
+                "HUD and Run both need numpy / Pillow / OpenEXR.".format(
+                    media_err, self._repo_root()
+                )
+            )
+            self._action_log(tip.replace("\n", " "))
             self.set_error_msg(tip)
             return
 

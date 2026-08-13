@@ -7,7 +7,25 @@ import sys
 import threading
 from pathlib import Path
 
-from embr_ml import job_status, paths, prepare_frames, publish_cache, run_matte
+from embr_ml import job_status, paths, run_matte
+
+
+def _media_imports():
+    """Import prepare/publish only after media deps are present."""
+    try:
+        from embr_ml import prepare_frames, publish_cache
+    except ModuleNotFoundError as exc:
+        print(
+            "Missing worker media dependency ({0}).\n"
+            "Fix:\n"
+            "  cd …/embr-pybox-handlers/worker\n"
+            "  uv pip install -e .\n"
+            "  # or: uv pip install numpy Pillow OpenEXR\n"
+            "Then re-run process-job / Run Matte.".format(exc),
+            file=sys.stderr,
+        )
+        raise SystemExit(3) from exc
+    return prepare_frames, publish_cache
 
 
 def _resolve_job(name: str | None, job_dir: str | None) -> Path:
@@ -62,6 +80,7 @@ def process_job(
     width: int | None = None,
     height: int | None = None,
 ) -> int:
+    prepare_frames, publish_cache = _media_imports()
     paths.ensure_layout()
     try:
         job = _resolve_job(name, job_dir)

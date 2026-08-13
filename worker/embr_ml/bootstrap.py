@@ -153,16 +153,37 @@ def ensure_venv(repo_root: Path, *, python_version: str = "3.10") -> Path:
     else:
         print(f"venv exists: {py}", flush=True)
 
-    print("uv pip install -e .", flush=True)
+    print("uv pip install -e .  (numpy / Pillow / OpenEXR)", flush=True)
     subprocess.run(
         [str(uv), "pip", "install", "-e", "."],
         cwd=str(w),
         check=True,
         env=env,
     )
+    # Re-assert media deps even if an older empty editable was already linked.
+    print("uv pip install numpy Pillow OpenEXR", flush=True)
+    subprocess.run(
+        [str(uv), "pip", "install", "numpy", "Pillow", "OpenEXR"],
+        cwd=str(w),
+        check=True,
+        env=env,
+    )
     if not py.is_file():
         raise RuntimeError(f"venv python missing after install: {py}")
+    _verify_media_imports(py)
     return py
+
+
+def _verify_media_imports(py: Path) -> None:
+    print("verify: import numpy, PIL, OpenEXR", flush=True)
+    subprocess.run(
+        [
+            str(py),
+            "-c",
+            "import numpy, PIL, OpenEXR; print('media_imports_ok')",
+        ],
+        check=True,
+    )
 
 
 def ensure_models(repo_root: Path, ml_root: Path, *, force: bool = False) -> None:

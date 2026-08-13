@@ -4,12 +4,18 @@ version = "0.1.0"
 description = "Isolated CLI worker for Embr Pybox ML jobs (MatAnyone2 / SAM2)."
 readme = "README.md"
 requires-python = ">=3.10"
-# Keep default deps empty so Setup / ensure-models work with stdlib only.
-dependencies = []
+# Media stack used by prepare_frames / publish_cache / hud-overlay (no torch).
+dependencies = [
+    "numpy>=1.24",
+    "Pillow>=10.0",
+    "OpenEXR>=3.2",
+]
 
 [project.optional-dependencies]
-# Install MatAnyone2 separately on Linux CUDA, e.g.:
-#   uv pip install "matanyone2 @ git+https://github.com/pq-yang/MatAnyone2.git"
+# Torch + MatAnyone2 are heavy / platform-specific — install after base setup:
+#   uv pip install torch torchvision
+#   uv pip install -e "$EMBR_ML_ROOT/src/MatAnyone2"
+#   # or: uv pip install "matanyone2 @ git+https://github.com/pq-yang/MatAnyone2.git"
 matte = []
 
 [project.scripts]

@@ -12,20 +12,12 @@ Flame / system Python are never modified.
 | `$EMBR_ML_ROOT/models/matanyone2/` | Weight files |
 | `$EMBR_ML_ROOT/jobs/` | Shot jobs |
 
-## From Pybox (company-style)
+## Setup
 
-Handler: [`../handlers/embr_ml_worker.py`](../handlers/embr_ml_worker.py)
+ランタイム Install は **embr-python-scripts**（Script Manager）。  
+CLI でも同じ bootstrap を呼べます。 See [docs/dev-phase3.md](../docs/dev-phase3.md)。
 
-After `git clone` on the machine:
-
-1. Set **Repo Root** → clone path (absolute)  
-2. Set **EMBR_ML_ROOT** → `~/embr-ml`  
-3. **Run Setup** → installs uv (user), creates `worker/.venv`, `pip install -e .`, downloads weights  
-4. **Worker Status** / **Ensure Models** for later checks  
-
-Setup blocks Flame until finished (can take several minutes). See [docs/dev-phase3.md](../docs/dev-phase3.md).
-
-## One-time setup (terminal equivalent of Run Setup)
+## One-time setup (terminal)
 
 ```bash
 # Any python3 is fine (Flame's python also works to launch bootstrap)

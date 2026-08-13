@@ -13,8 +13,8 @@ Part of **[Embr](https://github.com/embr-dev/Embr)**. Hooks / Script Manager は
 | Handler | Notes |
 |---------|-------|
 | [handlers/embr_matte.py](./handlers/embr_matte.py) | 本番ノード（Init / Record / Guide / Run / HUD） |
-| [handlers/embr_ml_worker.py](./handlers/embr_ml_worker.py) | Setup / Ensure Models / Status |
 
+ランタイム Install（uv / venv / models）は **embr-python-scripts** 側。  
 Worker: [worker/README.md](./worker/README.md)  
 Data root: `~/Embr/ml` — [docs/embr-home.md](./docs/embr-home.md)  
 操作手順: [docs/dev-matte-run.md](./docs/dev-matte-run.md)
@@ -36,9 +36,5 @@ Data root: `~/Embr/ml` — [docs/embr-home.md](./docs/embr-home.md)
 
 | Repository | Role |
 |------------|------|
-| [embr-python-scripts](https://github.com/embr-dev/embr-python-scripts) | Flame Python hooks |
+| [embr-python-scripts](https://github.com/embr-dev/embr-python-scripts) | Flame Python hooks / Script Manager Install |
 | [embr-matchbox-shaders](https://github.com/embr-dev/embr-matchbox-shaders) | Matchbox shaders |
-
-## License
-
-MIT for Embr-authored code in this repository. Third-party models (SAM 2, MatAnyone 2, etc.) keep their own licenses — see research notes.

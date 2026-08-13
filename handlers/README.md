@@ -5,7 +5,8 @@ Flame が読む Pybox handler（`.py`）。
 | Handler | Role |
 |---------|------|
 | [embr_matte.py](./embr_matte.py) | 本番: Record / Guide / async Run + HUD / fgr·pha |
-| [embr_ml_worker.py](./embr_ml_worker.py) | Setup: Ensure Models / Status → uv worker |
+
+ランタイム Setup（uv / venv / models）は **embr-python-scripts** の Install。
 
 ## Flame での読み方
 

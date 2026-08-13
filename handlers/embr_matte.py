@@ -125,7 +125,8 @@ class EmbrMatte(pybox.BaseClass):
         guide = pybox.create_toggle_button(UI_GUIDE, False, row=1, col=2, page=0)
         run_btn = pybox.create_toggle_button(UI_RUN, False, row=2, col=2, page=0)
         status = pybox.create_toggle_button(UI_STATUS, False, row=3, col=2, page=0)
-        hud = pybox.create_toggle_button(UI_HUD, True, row=4, col=2, page=0)
+        # Default OFF: HUD spawns worker each miss and must not block Run.
+        hud = pybox.create_toggle_button(UI_HUD, False, row=4, col=2, page=0)
 
         padding = pybox.create_float_numeric(
             UI_PADDING, value=4.0, min=1.0, max=8.0, row=0, col=3, page=0
@@ -158,30 +159,21 @@ class EmbrMatte(pybox.BaseClass):
         self.execute()
 
     def execute(self):
-        # Always emit OutMatte first so Flame does not spin on handler errors.
+        # UI first — never run HUD/playback before action toggles (HUD can take
+        # seconds per frame and previously starved Run Matte).
         try:
-            self._playback_outputs()
-        except Exception:
-            pass
-
-        try:
-            changes = {el.get("name") for el in self.get_ui_changes()}
-
-            # Normalize Job Path display; do not pull a global "active job".
             self._normalize_job_path_ui()
             gate = self._gate()
 
-            # Flame sometimes omits toggles from get_ui_changes(); also watch value.
-            def _pressed(name):
-                return name in changes or bool(self.get_global_element_value(name))
-
-            if _pressed(UI_INIT):
-                self._init_job()
+            # Momentary actions: same pattern as Record (value), not get_ui_changes.
+            if self._toggle_on(self.get_global_element_value(UI_INIT)):
                 self.set_global_element_value(UI_INIT, False)
+                self._action_log("Init Job")
+                self._init_job()
                 self._normalize_job_path_ui()
                 gate = self._gate()
 
-            if self.get_global_element_value(UI_RECORD):
+            if self._toggle_on(self.get_global_element_value(UI_RECORD)):
                 if gate["allow_record"]:
                     self._record_front()
                 else:
@@ -190,37 +182,46 @@ class EmbrMatte(pybox.BaseClass):
                         "Embr Matte: Record disabled — {0}".format(gate["hint"])
                     )
 
-            if _pressed(UI_GUIDE):
+            if self._toggle_on(self.get_global_element_value(UI_GUIDE)):
+                self.set_global_element_value(UI_GUIDE, False)
                 if gate["allow_guide"]:
+                    self._action_log("Capture Guide")
                     self._capture_guide()
                 else:
+                    self._action_log("Capture Guide blocked: {0}".format(gate["hint"]))
                     self.set_warning_msg(
                         "Embr Matte: Capture Guide disabled — {0}".format(gate["hint"])
                     )
-                self.set_global_element_value(UI_GUIDE, False)
 
-            if _pressed(UI_RUN):
+            if self._toggle_on(self.get_global_element_value(UI_RUN)):
+                self.set_global_element_value(UI_RUN, False)
                 if gate["allow_run"]:
+                    self._action_log(
+                        "Run Matte (inputs={0}, mask={1})".format(
+                            gate["n_input"], gate["has_mask"]
+                        )
+                    )
                     self._start_run()
                 else:
+                    self._action_log("Run blocked: {0}".format(gate["hint"]))
                     self.set_warning_msg(
                         "Embr Matte: Run disabled — {0}".format(gate["hint"])
                     )
-                self.set_global_element_value(UI_RUN, False)
                 gate = self._gate()
 
-            force_status = _pressed(UI_STATUS)
+            force_status = self._toggle_on(self.get_global_element_value(UI_STATUS))
             if force_status:
                 self.set_global_element_value(UI_STATUS, False)
+                self._action_log("Refresh Status")
 
             if gate["running"] or force_status:
                 self._refresh_status_notice(force=force_status)
-            elif UI_INIT not in changes and not self.get_global_element_value(UI_RECORD):
-                # Keep hint visible; HUD may also show the same info on Result.
+            elif not self._toggle_on(self.get_global_element_value(UI_RECORD)):
                 self.set_notice_msg("Embr Matte: {0}".format(gate["hint"]))
 
             self._playback_outputs()
         except Exception as exc:
+            self._action_log("execute error: {0}".format(exc))
             self.set_error_msg("Embr Matte: execute error: {0}".format(exc))
             try:
                 self._playback_outputs()
@@ -395,7 +396,12 @@ class EmbrMatte(pybox.BaseClass):
 
     def _repo_root(self):
         value = self.get_global_element_value(UI_REPO)
+        # File browser may return str or a one-element sequence.
+        if isinstance(value, (list, tuple)) and value:
+            value = value[0]
         path = os.path.expanduser(str(value or "").strip())
+        if path.endswith(os.sep + "worker") or path.endswith("/worker"):
+            path = os.path.dirname(path)
         return path or DEFAULT_REPO
 
     def _device(self):
@@ -405,6 +411,22 @@ class EmbrMatte(pybox.BaseClass):
 
     def _worker_python(self):
         return os.path.join(self._repo_root(), "worker", ".venv", "bin", "python")
+
+    def _action_log(self, message):
+        """Append diagnostics even when Flame Message Console is ignored."""
+        job = self._job_dir()
+        if not job:
+            return
+        path = os.path.join(job, "handler_actions.log")
+        try:
+            with open(path, "a") as fh:
+                fh.write(
+                    "{0} {1}\n".format(
+                        datetime.now().strftime("%Y-%m-%d %H:%M:%S"), message
+                    )
+                )
+        except Exception:
+            pass
 
     def _frame_pad(self):
         pad = int(round(float(self.get_render_element_value(UI_PADDING) or 4)))
@@ -636,22 +658,25 @@ class EmbrMatte(pybox.BaseClass):
     def _start_run(self):
         job = self._job_dir()
         if not job:
+            self._action_log("Run abort: no job")
             self.set_error_msg("Embr Matte: no job — Init first")
             return
         python = self._worker_python()
         if not os.path.isfile(python):
-            self.set_error_msg(
+            tip = (
                 "Embr Matte: worker python missing:\n{0}\n"
                 "Install Embr runtime (uv + clone under ~/Embr/repos/…), "
                 "then set Repo Root to that clone.".format(python)
             )
+            self._action_log(tip.replace("\n", " "))
+            self.set_error_msg(tip)
             return
 
         alive = self._running_pid()
         if alive:
-            self.set_warning_msg(
-                "Embr Matte: already running (pid {0}). Refresh Status.".format(alive)
-            )
+            tip = "Embr Matte: already running (pid {0}). Refresh Status.".format(alive)
+            self._action_log(tip)
+            self.set_warning_msg(tip)
             return
 
         input_dir = os.path.join(job, INPUT_SUBDIR)
@@ -661,14 +686,16 @@ class EmbrMatte(pybox.BaseClass):
 
         n_input = self._count_input_frames(job)
         if n_input < 1:
-            self.set_error_msg(
-                "Embr Matte: no frames in input/. Turn on Record Front and Play/scrub."
-            )
+            tip = "Embr Matte: no frames in input/. Turn on Record Front and Play/scrub."
+            self._action_log(tip)
+            self.set_error_msg(tip)
             return
         if not self._has_mask(job):
-            self.set_error_msg(
+            tip = (
                 "Embr Matte: missing mask. Capture Guide Matte on the first recorded frame."
             )
+            self._action_log(tip)
+            self.set_error_msg(tip)
             return
 
         env = self._worker_env()
@@ -738,11 +765,17 @@ class EmbrMatte(pybox.BaseClass):
         except Exception:
             pass
 
-        self.set_notice_msg(
-            "Embr Matte: started pid={0} · {1} input frames · scrub or Refresh Status".format(
-                proc.pid, n_input
+        msg = (
+            "Embr Matte: started pid={0} · {1} input frames · log={2}".format(
+                proc.pid, n_input, log_path
             )
         )
+        self._action_log(msg)
+        self.set_notice_msg(msg)
+        try:
+            self.set_dialog_msg(msg)
+        except Exception:
+            pass
 
     def _refresh_status_notice(self, force=False):
         data = self._read_status()
@@ -899,26 +932,57 @@ class EmbrMatte(pybox.BaseClass):
         return text in ("1", "true", "on", "yes")
 
     def _apply_hud(self, base_src, out_result, gate):
-        """Composite status panel onto Result via worker (Flame Python lacks PIL)."""
+        """Composite status panel onto Result via worker (Flame Python lacks PIL).
+
+        Caches per batch frame so scrubbing does not re-spawn PIL/OpenEXR every time.
+        """
         if not base_src or not os.path.isfile(base_src):
             return False
         python = self._worker_python()
         if not os.path.isfile(python):
-            self.set_warning_msg(
+            tip = (
                 "Embr Matte: HUD needs worker venv:\n{0}\n"
-                "Run Setup / install runtime, then view Result.".format(python)
+                "Install Embr runtime (python-scripts), set Repo Root.".format(python)
             )
+            self._action_log(tip.replace("\n", " "))
+            self.set_warning_msg(tip)
             return self._safe_copy(base_src, out_result)
 
         job = self._job_dir()
-        info_path = os.path.join(
-            job if job else tempfile.gettempdir(), HUD_JSON
-        )
+        lines = self._hud_lines(gate)
         try:
-            payload = {
-                "title": "Embr Matte",
-                "lines": self._hud_lines(gate),
-            }
+            base_mtime = os.path.getmtime(base_src)
+        except Exception:
+            base_mtime = 0.0
+        cache_key = "{0}|{1}|{2}".format(
+            base_src, base_mtime, "\n".join(lines)
+        )
+
+        cache_dir = None
+        cache_exr = None
+        cache_key_path = None
+        if job:
+            cache_dir = os.path.join(job, ".hud")
+            frame = self._batch_frame()
+            cache_exr = os.path.join(cache_dir, "{0}.exr".format(frame))
+            cache_key_path = os.path.join(cache_dir, "{0}.key".format(frame))
+            try:
+                if (
+                    cache_exr
+                    and os.path.isfile(cache_exr)
+                    and cache_key_path
+                    and os.path.isfile(cache_key_path)
+                ):
+                    with open(cache_key_path, "r") as fh:
+                        prev = fh.read()
+                    if prev == cache_key:
+                        return self._safe_copy(cache_exr, out_result)
+            except Exception:
+                pass
+
+        info_path = os.path.join(job if job else tempfile.gettempdir(), HUD_JSON)
+        try:
+            payload = {"title": "Embr Matte", "lines": lines}
             parent = os.path.dirname(info_path)
             if parent:
                 os.makedirs(parent, exist_ok=True)
@@ -928,15 +992,22 @@ class EmbrMatte(pybox.BaseClass):
             self.set_warning_msg("Embr Matte: HUD info write failed: {0}".format(exc))
             return self._safe_copy(base_src, out_result)
 
+        render_out = cache_exr or out_result
+        if cache_dir:
+            try:
+                os.makedirs(cache_dir, exist_ok=True)
+            except Exception:
+                render_out = out_result
+
+        # Direct module — avoids pulling ensure_models via embr_ml.cli import side paths.
         cmd = [
             python,
             "-m",
-            "embr_ml.cli",
-            "hud-overlay",
+            "embr_ml.hud_overlay",
             "--base",
             base_src,
             "--out",
-            out_result,
+            render_out,
             "--info-json",
             info_path,
         ]
@@ -948,19 +1019,29 @@ class EmbrMatte(pybox.BaseClass):
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 universal_newlines=True,
-                timeout=8,
+                timeout=12,
             )
         except Exception as exc:
+            self._action_log("HUD failed: {0}".format(exc))
             self.set_warning_msg("Embr Matte: HUD failed to start: {0}".format(exc))
             return self._safe_copy(base_src, out_result)
 
-        if proc.returncode != 0 or not os.path.isfile(out_result):
+        if proc.returncode != 0 or not os.path.isfile(render_out):
             tail = (proc.stdout or "").strip().splitlines()
             tip = " | ".join(tail[-3:]) if tail else "no output"
+            self._action_log("HUD exit {0}: {1}".format(proc.returncode, tip))
             self.set_warning_msg(
                 "Embr Matte: HUD exit {0}: {1}".format(proc.returncode, tip)
             )
             return self._safe_copy(base_src, out_result)
+
+        if cache_key_path and render_out == cache_exr:
+            try:
+                with open(cache_key_path, "w") as fh:
+                    fh.write(cache_key)
+            except Exception:
+                pass
+            return self._safe_copy(cache_exr, out_result)
         return True
 
     def _playback_outputs(self):

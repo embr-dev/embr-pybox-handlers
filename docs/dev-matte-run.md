@@ -7,7 +7,7 @@ Front + ガイド Matte → 裏で `process-job` → Result=`fgr` / OutMatte=`ph
 
 `handlers/embr_matte.py`
 
-前提: `embr_ml_worker` の **Run Setup** 済み（`worker/.venv`）。
+前提: embr-python-scripts の **Install** 済み（`~/Embr` + `worker/.venv`）。
 
 ## Batch 手順
 
@@ -58,7 +58,7 @@ job/
 
 ## Result HUD
 
-**Show HUD**（Actions 列）を ON にすると、Result ビュー左上にステータスパネルを焼き込みます。
+**Show HUD**（Actions 列）を ON にすると、Result ビュー左上にステータスパネルを焼き込みます（初期は OFF。ON 時は worker の PIL で合成）。
 
 表示例:
 - Job 名 / 現在 Batch フレーム
@@ -69,5 +69,13 @@ job/
 - Run 進捗（status.json）
 
 OFF にするとクリーンな fgr / Front のみ。  
-（Pybox にビューア HUD API は無いため画像へ合成。worker の PIL を使用）
+ビューは **Result** を見てください（HUD は Result のみ）。
+
+## トラブルシュート
+
+| 症状 | 確認 |
+|------|------|
+| Run が無反応 | Message Console / `job/handler_actions.log` / `job/run.log` |
+| HUD が出ない | Show HUD ON・Result 表示・`worker/.venv` の有無・warning |
+| worker python missing | Repo Root = clone ルート（`…/embr-pybox-handlers`） |
 

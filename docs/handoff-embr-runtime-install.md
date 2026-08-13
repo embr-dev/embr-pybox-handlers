@@ -63,7 +63,7 @@
 | リポ | やること |
 |------|----------|
 | **`embr-python-scripts`** | ユーザー向け **Install / Repair / Uninstall**（メニュー or Script Manager）。`~/Embr` 作成、uv 配置、handlers リポ配置、bootstrap 起動、状態表示 |
-| **`embr-pybox-handlers`** | `worker/embr_ml/bootstrap.py` が **Embr 配下の uv を優先**。Pybox handler（`embr_ml_worker` / `embr_matte`）。推論 CLI |
+| **`embr-pybox-handlers`** | `worker/embr_ml/bootstrap.py` が **Embr 配下の uv を優先**。Pybox handler（`embr_matte`）。推論 CLI |
 
 Flame hooks のインストール先（`…/python/Embr/`）と **`~/Embr` ランタイムは別物**:
 
@@ -197,7 +197,7 @@ test -x "$EMBR_HOME/bin/uv"
 
 Pybox:
 
-- `embr_ml_worker` / `embr_matte` の Repo Root 既定を  
+- `embr_matte` の Repo Root 既定を  
   `$EMBR_HOME/repos/embr-pybox-handlers` に寄せると Install 後の導線が短い  
 - `EMBR_ML_ROOT` 既定は既に `~/Embr/ml`
 
@@ -219,8 +219,9 @@ Install 完了の定義:
 
 | Handler | 用途 |
 |---------|------|
-| `handlers/embr_ml_worker.py` | Setup / Ensure Models / Status（移行期） |
 | `handlers/embr_matte.py` | 本番作業（Init / Record / Run / HUD） |
+
+Setup UI は **embr-python-scripts** の Install（本リポの Setup handler は廃止）。
 
 作業ドキュメント: `embr-pybox-handlers/docs/dev-matte-run.md`  
 ホームレイアウト: `embr-pybox-handlers/docs/embr-home.md`
@@ -305,7 +306,6 @@ curl -LsSf https://astral.sh/uv/install.sh | UV_INSTALL_DIR="$HOME/Embr/bin" sh
 | `docs/dev-matte-run.md` | embr_matte 操作 |
 | `worker/embr_ml/bootstrap.py` | **要改修**（uv 配置） |
 | `worker/embr_ml/paths.py` | `EMBR_HOME` / `EMBR_ML_ROOT` |
-| `handlers/embr_ml_worker.py` | Pybox Setup UI |
 | `handlers/embr_matte.py` | 作業用 Pybox |
 
 質問・齟齬があれば `embr-pybox-handlers` 側の上記ドキュメントを正とし、本資料を更新すること。

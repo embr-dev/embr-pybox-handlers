@@ -1,0 +1,38 @@
+@font-face{font-family:ArtifaktLegend;src:url("../fonts/artifakt-legend/artifakt-legend-regular.woff2") format("woff2"),url("../fonts/artifakt-legend/artifakt-legend-regular.woff") format("woff");font-weight:400;font-display:swap}
+@font-face{font-family:ArtifaktLegend;src:url("../fonts/artifakt-legend/artifakt-legend-medium.woff2") format("woff2"),url("../fonts/artifakt-legend/artifakt-legend-medium.woff") format("woff");font-weight:500;font-display:swap}
+@font-face{font-family:ArtifaktLegend;src:url("../fonts/artifakt-legend/artifakt-legend-semi-bold.woff2") format("woff2"),url("../fonts/artifakt-legend/artifakt-legend-semi-bold.woff") format("woff");font-weight:600;font-display:swap}
+@font-face{font-family:ArtifaktLegend;src:url("https://swc.autodesk.com/pharmacopeia/fonts/ArtifaktLegend/v1.0/WOFF2/Artifakt%20Legend%20Extra%20Bold.woff2") format("woff2"),url("https://swc.autodesk.com/pharmacopeia/fonts/ArtifaktLegend/v1.0/WOFF/Artifakt%20Legend%20Extra%20Bold.woff") format("woff");font-weight:800;font-display:swap}
+@font-face{font-family:ArtifaktElement;src:url("https://swc.autodesk.com/pharmacopeia/fonts/ArtifaktElement/v1.0/WOFF2/Artifakt%20Element%20Regular.woff2") format("woff2"),url("https://swc.autodesk.com/pharmacopeia/fonts/ArtifaktElement/v1.0/WOFF/Artifakt%20Element%20Regular.woff") format("woff");font-weight:400;font-display:swap}
+@font-face{font-family:ArtifaktElement;src:url("../fonts/artifakt-element/artifakt-element-medium.woff2") format("woff2"),url("../fonts/artifakt-element/artifakt-element-medium.woff") format("woff");font-weight:500;font-display:swap}
+@font-face{font-family:ArtifaktElement;src:url("https://swc.autodesk.com/pharmacopeia/fonts/ArtifaktElement/v1.0/WOFF2/Artifakt%20Element%20Semi%20Bold.woff2") format("woff2"),url("https://swc.autodesk.com/pharmacopeia/fonts/ArtifaktElement/v1.0/WOFF/Artifakt%20Element%20Semi%20Bold.woff") format("woff");font-weight:600;font-display:swap}
+@font-face{font-family:ArtifaktElement;src:url("https://swc.autodesk.com/pharmacopeia/fonts/ArtifaktElement/v1.0/WOFF2/Artifakt%20Element%20Bold.woff2") format("woff2"),url("https://swc.autodesk.com/pharmacopeia/fonts/ArtifaktElement/v1.0/WOFF/Artifakt%20Element%20Bold.woff") format("woff");font-weight:700;font-display:swap}
+@font-face{font-family:ArtifaktElement;src:url("../fonts/artifakt-element/artifakt-element-italic.woff2") format("woff2"),url("../fonts/artifakt-element/artifakt-element-italic.woff") format("woff");font-style:italic;font-weight:400;font-display:swap}
+@font-face{font-family:ArtifaktElement;src:url("../fonts/artifakt-element/artifakt-element-medium-italic.woff2") format("woff2"),url("../fonts/artifakt-element/artifakt-element-medium-italic.woff") format("woff");font-style:italic;font-weight:500;font-display:swap}
+@font-face{font-family:ArtifaktElement;src:url("../fonts/artifakt-element/artifakt-element-bold-italic.woff2") format("woff2"),url("../fonts/artifakt-element/artifakt-element-bold-italic.woff") format("woff");font-style:italic;font-weight:700;font-display:swap}
+@font-face{font-family:FontAwesome;src:url("../fonts/fontawesome-webfont.woff2?v=4.7.0") format("woff2"),url("../fonts/fontawesome-webfont.woff?v=4.7.0") format("woff");font-weight:400;font-style:normal;font-display:block}
+.ui-dropdown{position:relative;z-index:1000;min-height:16px}
+.ui-dropdown .ui-dropdown__trigger{cursor:pointer;display:block;min-height:16px;padding:0 15px;outline:0}
+.ui-dropdown .ui-dropdown__trigger span{padding-right:18px;min-height:16px;display:block;position:relative}
+.ui-dropdown .ui-dropdown__trigger span::after{content:"";border:0;position:absolute;top:50%;right:0;background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCA5IDE2Ij48cGF0aCBzdHJva2U9IiMwMDAiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjEiIGQ9Im04IDYuMjUtMy41IDMuNUwxIDYuMjUiLz48L3N2Zz4=");width:13px;height:16px;background-size:16px 16px;background-repeat:no-repeat;margin-top:-7px}
+.ui-dropdown .ui-dropdown__list{padding:6px 1px;margin:0;position:absolute;z-index:1000;list-style-type:none;background-color:#fff;border:0;box-shadow:0 0 8px rgba(0,0,0,.2);left:-1px;right:-1px;width:inherit;outline:0;display:block;visibility:hidden;opacity:0;border-radius:0 0 4px 4px;box-shadow:0 1px 0 #000,inset 0 0 0 1px rgba(0,0,0,.6)}
+.ui-dropdown .ui-dropdown__list::after,.ui-dropdown .ui-dropdown__list::before{content:"";border-style:none solid solid;border-width:0 7px 8px;position:absolute;width:0;height:0;z-index:1001;right:12px}
+.ui-dropdown .ui-dropdown__list::before{border-color:#000 transparent;top:-8px}
+.ui-dropdown .ui-dropdown__list::after{border-color:#fff transparent;top:-7px}
+.ui-dropdown .ui-dropdown__list[aria-hidden=false]{display:block;visibility:visible;opacity:1}
+.ui-dropdown .ui-dropdown__list li{cursor:pointer;margin:0;padding:8px 16px}
+.ui-dropdown .ui-dropdown__list li:focus,.ui-dropdown .ui-dropdown__list li:hover,.ui-dropdown .ui-dropdown__list li[aria-selected=true]{outline:0;background-color:#f7f7f7}
+.ui-dropdown .ui-dropdown__list li>a,.ui-dropdown .ui-dropdown__list li>a:focus,.ui-dropdown .ui-dropdown__list li>a:hover,.ui-dropdown .ui-dropdown__list li>a:visited{text-decoration:inherit;color:inherit;background-color:inherit;outline:0}
+.ui-dropdown .ui-dropdown__list li>a{padding:8px 16px;margin:-8px -16px;display:block}
+.ui-dropdown .ui-dropdown__list li>a:focus,.ui-dropdown .ui-dropdown__list li>a:hover{background-color:#f7f7f7}
+.ui-dropdown .ui-dropdown__trigger[aria-expanded=true] span::after{transform:translateX(3px) rotate(180deg)}
+.ui-dropdown .ui-dropdown__list li:focus-visible,.ui-dropdown .ui-dropdown__list li>a:focus-visible{background-color:transparent;box-shadow:inset 0 0 0 2px #5f60ff}
+.ui-dropdown .ui-dropdown__list li:active,.ui-dropdown .ui-dropdown__list li>a:active{background-color:#e8e8e8}
+.ui-identity-sign-in{cursor:pointer;display:inline-block;padding:0 15px;border:0;background-color:transparent;font-family:inherit;font-size:inherit;line-height:inherit;font-weight:inherit;color:inherit}
+.ui-identity-sign-in:focus{outline:0}
+.ui-identity-sign-in:focus-visible{box-shadow:inset 0 0 0 2px #5f60ff}
+.ui-nav-identity .ui-dropdown li{white-space:nowrap}
+.ui-nav-identity .ui-profile-avatar{border-radius:50%;background-color:#666;color:#fff;display:none;vertical-align:middle;width:24px;height:24px;line-height:24px;text-align:center;font-size:11px;font-weight:500;position:relative;top:-1px}
+@media (max-width:480px){
+.ui-nav-identity .ui-profile-avatar{display:inline-block}
+.ui-nav-identity .ui-dropdown__trigger span{text-indent:-9999em;width:0;overflow:hidden;vertical-align:bottom}
+}

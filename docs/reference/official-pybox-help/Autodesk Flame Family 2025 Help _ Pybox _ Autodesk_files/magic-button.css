@@ -1,0 +1,41 @@
+/*** magic button styles ***/
+
+div#github-link-container {
+  margin:20px 0px 0px 0px;
+  text-align:right;
+  display:block;
+}
+
+div#github-link-content {
+  display:inline-block
+}
+
+a.github-link, a.github-link:visited, a.github-link:hover, a.github-link:active, a.github-link:focus {
+  background-color: 60b044;
+  background-image: -webkit-linear-gradient(#8add6d, #60b044);
+  background-image: linear-gradient(#8add6d, #60b044);
+  border-color: #5ca941;
+  padding: 3px 10px;
+  font-size: 12px;
+  display: block;
+  text-shadow: 0 -1px 0 rgba(0,0,0,0.15);
+  border: 1px solid #5ca941;
+  border-radius: 3px;
+  text-decoration: none;
+}
+
+a.github-link:hover {
+  background-color: #569e3d;
+  background-image: -webkit-linear-gradient(#79d858, #569e3d);
+  background-image: linear-gradient(#79d858, #569e3d);
+  text-decoration: none;
+}
+
+.github-link-text {
+  color:#FFFFFF;
+  text-shadow: 0 -1px 0 rgba(0,0,0,0.15);
+  font-weight: 600;
+  font-size: 12px;
+  font-family: Segoe UI;
+}
+

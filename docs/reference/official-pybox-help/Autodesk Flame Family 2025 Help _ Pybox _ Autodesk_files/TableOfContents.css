@@ -1,0 +1,43 @@
+.ui-contents-panel{height:100%}
+.node-tree-overflow{height:100%;background-color:#fff;overflow:auto;border-right:1px solid #eee}
+.node-tree-container{margin:16px 0 80px;padding:0 32px 0 0;border-right:0}
+.ui-contents-panel .ui-sidebar-toggle{top:14px;background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+PHBhdGggZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utb3BhY2l0eT0iLjcyIiBkPSJNNC41IDguNWgtNHYtOGg4djhoLTR2N2g3djRoOHYtOGgtOHY0Ii8+PC9zdmc+")}
+.panel-open .ui-contents-panel .ui-sidebar-toggle{background-color:#666;background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSI2Ij48cGF0aCBmaWxsPSIjZmZmIiBzdHJva2U9IiNmZmYiIHN0cm9rZS1vcGFjaXR5PSIuOSIgc3Ryb2tlLXdpZHRoPSIuMTUiIGQ9Ik00LjUgMEwwIDNsNC41IDNWNEgxNlYySDQuNVYweiIvPjwvc3ZnPg==")}
+.node-tree{outline:0}
+.node-tree,.node-tree li{line-height:1.2;list-style-type:none;margin:0;padding:0;font-size:14px;color:#212121}
+.node-tree .node-tree-item{padding:8px 0 8px 24px;position:relative}
+.node-tree-item .node-tree-item{padding:6px 0 6px 22px}
+.node-tree-item>[role=button]{cursor:pointer;outline:0}
+.node-tree-item[aria-expanded]>.expand-collapse{font-family:FontAwesome;height:24px;font-size:22px;line-height:24px;float:left;position:absolute;top:4px;left:0;text-align:center;color:#212121;width:24px;font-family:inherit}
+.node-tree-item .node-tree-item[aria-expanded]>.expand-collapse{top:2px}
+.node-tree-item .node-tree-item[aria-expanded]>.expand-collapse::before{font-size:18px;line-height:20px}
+.node-tree-item .node-tree-item .node-tree-item[aria-expanded]>.expand-collapse{color:#777}
+.node-tree-item[aria-expanded=false]>.expand-collapse::before{content:"\f055";background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCAxNiAxNiI+PHBhdGggc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjUiIGQ9Ik04IDN2MTBNMyA4aDEwIi8+PC9zdmc+")}
+.node-tree-item[aria-expanded=true]>.expand-collapse::before{content:"\f056";background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIGZpbGw9Im5vbmUiIHZpZXdCb3g9IjAgMCAxNiAxNiI+PHBhdGggc3Ryb2tlPSJjdXJyZW50Q29sb3IiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLXdpZHRoPSIxLjUiIGQ9Ik0zIDhoMTAiLz48L3N2Zz4=")}
+.node-tree-item .node-tree-item[aria-expanded=false]>.expand-collapse::before{content:"\f067"}
+.node-tree-item .node-tree-item[aria-expanded=true]>.expand-collapse::before{content:"\f068"}
+.node-tree-item .node-tree-item[aria-expanded]>.expand-collapse::before,.node-tree-item[aria-expanded]>.expand-collapse::before{content:"";display:block;width:24px;height:24px;background-repeat:no-repeat;background-position:center center;background-size:16px 16px}
+.node-tree-item>a{text-decoration:none;display:inline-block;cursor:default;margin-left:4px;overflow:visible!important;color:#212121}
+.node-tree-item>a:focus-visible{outline:#5F60FF solid 2px;outline-offset:2px}
+.node-tree-item>a[href]{color:#327084;cursor:pointer}
+.node-tree-item>a[href]:focus,.node-tree-item>a[href]:hover{color:#275666}
+.node-tree-item>a[href]:hover{text-decoration:underline}
+.node-tree-item>a[href]:link{color:#4444f8;text-decoration:none}
+.node-tree-item>a[href]:visited{color:#4444f8}
+.node-tree-item>a[href]:hover{color:#2c2c8c}
+.node-tree-item>a[href]:active{color:#8080ff}
+.node-tree-item>a[href]:focus-visible{color:#4444f8}
+.node-tree .node-tree{display:none;padding-top:5px}
+.node-tree-item[aria-expanded=true]>.node-tree{display:block}
+.node-tree-item[aria-selected=true]>a{font-weight:700}
+@media (max-width:1023px){
+.ui-contents-panel{height:auto;max-height:100%;flex:0 0 auto;display:flex;flex-direction:column}
+.node-tree-container{margin-bottom:16px;padding-left:20px;padding-right:24px;flex:1 0 auto}
+.node-tree-overflow{height:auto;flex:0 1 auto}
+}
+@media (min-width:1024px) and (max-width:1279px){
+.node-tree-container{margin-bottom:120px}
+}
+@media (min-width:1280px) and (max-width:1366px){
+.node-tree-container{margin-bottom:90px}
+}

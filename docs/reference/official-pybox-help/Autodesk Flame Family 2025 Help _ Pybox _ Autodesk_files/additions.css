@@ -1,0 +1,213 @@
+
+/*** core style overrides ***/
+
+code {
+  font-family: Consolas, "Courier New", Courier, "Nimbus Mono L", monospace;
+  font-size: smaller;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
+  padding: 0px 5px;
+  background: ghostwhite;
+}
+th code {
+  color: black;
+}
+pre {
+  padding: 10px 20px;
+  background-color: ghostwhite;
+  border: 1px solid lightgrey;
+  border-radius: 3px;
+}
+pre code {
+  border: none;
+  padding: 0;
+  background: inherit;
+}
+
+blockquote {
+  padding-left: 25px;
+  border-left: 3px solid #EEE;
+  margin-left: 25px;
+}
+
+table {
+  width:100%;
+  border-collapse:collapse;
+}
+
+td, th  {
+  border:solid lightgrey;
+  border-width: 1px 0px;
+  padding:5px 10px;
+  text-align:left;
+}
+
+th {
+  background-color:#327084;
+  color:white;
+}
+
+tr:nth-child(odd) {
+  background-color:ghostwhite;
+}
+
+.invisible table {
+    width:auto;
+}
+
+.invisible td, .invisible th {
+    border:0;
+    padding:0;
+    background-color:white;
+    color:inherit;
+}
+
+/*** callout styles ***/
+
+.callout {
+  max-width: 1000px;
+  border-radius: 3px;
+  margin: 10px 0px 15px;
+  border: 1px solid rgba(221,221,221,1);
+  box-shadow: 5px 5px 0px 0px rgba(221,221,221,1);
+  display:table;
+}
+
+.callout-icon {
+  margin-right:10px;
+}
+
+.callout-title {
+  padding: 5px 20px;
+  background-color:#327084;
+  color: white;
+  font-weight: bold;
+}
+
+.callout-body {
+  padding: 5px 20px;
+}
+
+.callout-note  .callout-title {
+  background-color: #327084;
+}
+
+.callout-tip  .callout-title {
+  background-color: #327084;
+}
+
+.callout-caution  .callout-title {
+  background-color: #FF9900;
+}
+
+.callout-warning  .callout-title {
+  background-color: #cc0000;
+}
+
+.callout-nicework  .callout-title {
+  background-color: #009900;
+}
+
+/* extra style additions */
+
+#body-content ul.grid-list {
+  list-style-type:none;
+  padding:0
+}
+#body-content ul.grid-list > li {
+  padding-top:15px;
+}
+
+@media (min-width:1244px) and (max-width:1676px) {
+  #body-content ul.grid-list > li:nth-child(2n+1) {
+    clear:both;
+  }
+}
+@media (min-width:1676px) {
+  #body-content ul.grid-list > li:nth-child(3n+1) {
+    clear:both;
+  }
+}
+
+/* This is to override the AKN padding, which makes
+   the list item indicators dissapear. */
+ul, ol {padding-left: 2em;}
+
+
+/*** Overrides for syntax coloring ***/
+
+pre code.prettyprinted a:link {
+    text-decoration: dotted underline;
+}
+
+code a:hover {
+    margin: -1px -6px;
+    padding: 0px 5px;
+    background-color: #ffffff;
+    border-radius: 3px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #00ABE5;
+    text-decoration: none !important;
+}
+/* sets default nested ordered list styles */
+ol ol {list-style-type: lower-alpha;}
+ol ol ol {list-style-type: lower-roman;}
+
+/* defines optional styles for order lists */
+div.ol-lower-alpha ol {list-style-type: lower-alpha;}
+div.ol-upper-alpha ol {list-style-type: upper-alpha;}
+div.ol-lower-roman ol {list-style-type: lower-roman;}
+div.ol-upper-roman ol {list-style-type: upper-roman;}	
+
+div.ol-ol-lower-alpha ol ol {list-style-type: lower-alpha;}
+div.ol-ol-upper-alpha ol ol {list-style-type: upper-alpha;}
+div.ol-ol-lower-roman ol ol {list-style-type: lower-roman;}
+div.ol-ol-upper-roman ol ol {list-style-type: upper-roman;}	
+div.ol-ol-decimal ol ol {list-style-type: decimal;}
+
+div.ol-ol-ol-lower-alpha ol ol ol {list-style-type: lower-alpha;}
+div.ol-ol-ol-upper-alpha ol ol ol {list-style-type: upper-alpha;}
+div.ol-ol-ol-lower-roman ol ol ol {list-style-type: lower-roman;}
+div.ol-ol-ol-upper-roman ol ol ol {list-style-type: upper-roman;}
+div.ol-ol-ol-decimal ol ol ol {list-style-type: decimal;}
+
+/* creates borderless table without background or header*/
+.tablenobordernocolor>table,table.ruled{background-color:#fff;margin:1.4em 0;width:100%;border:0 none}
+.tablenobordernocolor>table th,table.ruled tr.ruled-heading th{padding:7px;vertical-align:middle;border:0 none;text-align:left}
+.tablenobordernocolor>table td,table.ruled tr.ruled-even-row td,table.ruled tr.ruled-odd-row td{padding:7px;text-align:left;vertical-align:top;border:0 none}
+.tablenobordernocolor>table tr:nth-child(odd),table.ruled tr.ruled-odd-row td{background-color:#fff}
+.tablenobordernocolor>table th{background-color:#fff}
+
+.tablenobordernocolor>div>table,table.ruled{background-color:#fff;margin:1.4em 0;width:100%;border:0 none}
+.tablenobordernocolor>div>table th,table.ruled tr.ruled-heading th{padding:7px;vertical-align:middle;border:0 none;text-align:left}
+.tablenobordernocolor>div>table td,table.ruled tr.ruled-even-row td,table.ruled tr.ruled-odd-row td{padding:7px;text-align:left;vertical-align:top;border:0 none}
+.tablenobordernocolor>div>table tr:nth-child(odd),table.ruled tr.ruled-odd-row td{background-color:#fff}
+.tablenobordernocolor>div>table th{background-color:#fff}
+
+.language-maxscript .str { color: #7F007F; }
+.language-maxscript .kwd1 { color: #00007F; font-weight:bold; }
+.language-maxscript .kwd2 { color: #000; font-weight:bold; }
+.language-maxscript .kwd3 { color: #3060A0; }
+.language-maxscript .kwd4 { color: #6030A0; }
+.language-maxscript .kwd5 { color: #60A030; }
+.language-maxscript .kwd6 { color: #0040B0; }
+.language-maxscript .kwd7 { color: #00B040; font-style:italic; }
+.language-maxscript .kwd8 { color: #D0B080; font-style:italic; }
+.language-maxscript .kwd9 { color: #804020; font-style:italic; }
+.language-maxscript .kwd10 { color: #3060A0; font-style:italic; }
+.language-maxscript .kwd11 { color: #B00040; }
+.language-maxscript .verb { color: #007F00; background-color: #E0FFE0; }
+.language-maxscript .param { color:#804080; }
+.language-maxscript .pathn { color:#3F7F3F; background-color: #E0F0FF; }
+.language-maxscript .namev { color:#7F007F; }
+.language-maxscript .com { color: #007F00; }
+.language-maxscript .typ { color: #606; }
+.language-maxscript .lit { color: #007F7F; }
+.language-maxscript .pun { color: #660; }
+.language-maxscript .pln { color: #000; }
+.language-maxscript .tag { color: #008; }
+.language-maxscript .atn { color: #606; }
+.language-maxscript .atv { color: #080; }
+.language-maxscript .dec { color: #606; }
+

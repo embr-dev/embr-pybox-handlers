@@ -171,7 +171,11 @@ class EmbrMatte(pybox.BaseClass):
             self._normalize_job_path_ui()
             gate = self._gate()
 
-            if UI_INIT in changes:
+            # Flame sometimes omits toggles from get_ui_changes(); also watch value.
+            def _pressed(name):
+                return name in changes or bool(self.get_global_element_value(name))
+
+            if _pressed(UI_INIT):
                 self._init_job()
                 self.set_global_element_value(UI_INIT, False)
                 self._normalize_job_path_ui()
@@ -186,7 +190,7 @@ class EmbrMatte(pybox.BaseClass):
                         "Embr Matte: Record disabled — {0}".format(gate["hint"])
                     )
 
-            if UI_GUIDE in changes:
+            if _pressed(UI_GUIDE):
                 if gate["allow_guide"]:
                     self._capture_guide()
                 else:
@@ -195,7 +199,7 @@ class EmbrMatte(pybox.BaseClass):
                     )
                 self.set_global_element_value(UI_GUIDE, False)
 
-            if UI_RUN in changes:
+            if _pressed(UI_RUN):
                 if gate["allow_run"]:
                     self._start_run()
                 else:
@@ -203,14 +207,16 @@ class EmbrMatte(pybox.BaseClass):
                         "Embr Matte: Run disabled — {0}".format(gate["hint"])
                     )
                 self.set_global_element_value(UI_RUN, False)
+                gate = self._gate()
 
-            force_status = UI_STATUS in changes
+            force_status = _pressed(UI_STATUS)
             if force_status:
                 self.set_global_element_value(UI_STATUS, False)
 
             if gate["running"] or force_status:
                 self._refresh_status_notice(force=force_status)
             elif UI_INIT not in changes and not self.get_global_element_value(UI_RECORD):
+                # Keep hint visible; HUD may also show the same info on Result.
                 self.set_notice_msg("Embr Matte: {0}".format(gate["hint"]))
 
             self._playback_outputs()
@@ -881,13 +887,27 @@ class EmbrMatte(pybox.BaseClass):
 
         return lines
 
+    def _toggle_on(self, value):
+        """Pybox may return True/False, 1/0, or strings."""
+        if value is True or value is False:
+            return value
+        if value is None:
+            return False
+        if isinstance(value, (int, float)):
+            return value != 0
+        text = str(value).strip().lower()
+        return text in ("1", "true", "on", "yes")
+
     def _apply_hud(self, base_src, out_result, gate):
         """Composite status panel onto Result via worker (Flame Python lacks PIL)."""
         if not base_src or not os.path.isfile(base_src):
             return False
         python = self._worker_python()
         if not os.path.isfile(python):
-            # Fallback: plain copy; notice already explains Setup.
+            self.set_warning_msg(
+                "Embr Matte: HUD needs worker venv:\n{0}\n"
+                "Run Setup / install runtime, then view Result.".format(python)
+            )
             return self._safe_copy(base_src, out_result)
 
         job = self._job_dir()
@@ -904,7 +924,8 @@ class EmbrMatte(pybox.BaseClass):
                 os.makedirs(parent, exist_ok=True)
             with open(info_path, "w") as fh:
                 json.dump(payload, fh)
-        except Exception:
+        except Exception as exc:
+            self.set_warning_msg("Embr Matte: HUD info write failed: {0}".format(exc))
             return self._safe_copy(base_src, out_result)
 
         cmd = [
@@ -929,10 +950,16 @@ class EmbrMatte(pybox.BaseClass):
                 universal_newlines=True,
                 timeout=8,
             )
-        except Exception:
+        except Exception as exc:
+            self.set_warning_msg("Embr Matte: HUD failed to start: {0}".format(exc))
             return self._safe_copy(base_src, out_result)
 
         if proc.returncode != 0 or not os.path.isfile(out_result):
+            tail = (proc.stdout or "").strip().splitlines()
+            tip = " | ".join(tail[-3:]) if tail else "no output"
+            self.set_warning_msg(
+                "Embr Matte: HUD exit {0}: {1}".format(proc.returncode, tip)
+            )
             return self._safe_copy(base_src, out_result)
         return True
 
@@ -942,7 +969,7 @@ class EmbrMatte(pybox.BaseClass):
         front = self.get_in_socket_path(0)
         matte = self.get_in_socket_path(2)
         gate = self._gate()
-        show_hud = bool(self.get_global_element_value(UI_HUD))
+        show_hud = self._toggle_on(self.get_global_element_value(UI_HUD))
 
         fgr = self._fgr_path()
         base = None

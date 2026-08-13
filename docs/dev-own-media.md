@@ -10,9 +10,9 @@ Flame: 第1Fマスク書き出し → job/mask.png
         ↓
 embr-ml process-job  （run-matte + publish-cache）
         ↓
-job/alpha/{frame}.exr
+job/alpha/{frame}.exr  +  job/fgr/{frame}.exr
         ↓
-Pybox embr_cache_playback（Job Folder = job）
+Pybox embr_matte（Job Path = job）
 ```
 
 ## 1. ジョブフォルダを作る
@@ -78,18 +78,16 @@ Front が 1920×1080、Batch 先頭が 1 の例:
 
 ## 4. Batch 再生
 
-1. Handler: `handlers/embr_cache_playback.py`  
-2. Job Folder: `/Users/<you>/embr-ml/jobs/myshot`（`alpha` は選ばない）  
+1. Handler: `handlers/embr_matte.py`  
+2. Job Path = `/Users/<you>/Embr/ml/jobs/myshot`（または Init で作ったジョブ）  
 3. Front = 同じプレート  
-4. スクラブして OutMatte を確認  
-5. Log Status で `exists=True`
+4. スクラブして Result（fgr）/ OutMatte（pha）を確認  
+
+詳細: [dev-matte-run.md](./dev-matte-run.md)
 
 ## チェックリスト
 
 - [ ] `input/` にプレートがある  
-- [ ] `mask.png` がある（第1F・同解像度）  
+- [ ] `mask.png` / `mask.exr` がある（第1F・同解像度）  
 - [ ] `process-job` が完了し `alpha/*.exr` がある  
-- [ ] publish の width/height = Front  
 - [ ] Batch でマットが見える  
-
-問題が出たら Log Status の path と、Front の解像度・開始フレームを共有してください。

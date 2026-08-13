@@ -6,37 +6,31 @@ Part of **[Embr](https://github.com/embr-dev/Embr)**. Hooks / Script Manager は
 
 ## Status
 
-Phase 5: async **Embr Matte** (Record Front → Run → Result=fgr / OutMatte=pha).
+**Embr Matte** — Record Front → Run → Result=`fgr` / OutMatte=`pha`（`dev` ブランチで開発中）。
 
 ## Handlers
 
-| Handler | Phase | Notes |
-|---------|-------|-------|
-| [handlers/embr_hello.py](./handlers/embr_hello.py) | 1 | Passthrough + Log Frame Info |
-| [handlers/embr_cache_playback.py](./handlers/embr_cache_playback.py) | 2 | OutMatte from `job/alpha/{frame}.exr` |
-| [handlers/embr_ml_worker.py](./handlers/embr_ml_worker.py) | 3 | Ensure Models / Status via worker |
-| [handlers/embr_matte.py](./handlers/embr_matte.py) | 5 | Record / Guide / async Run + progress notice |
+| Handler | Notes |
+|---------|-------|
+| [handlers/embr_matte.py](./handlers/embr_matte.py) | 本番ノード（Init / Record / Guide / Run / HUD） |
+| [handlers/embr_ml_worker.py](./handlers/embr_ml_worker.py) | Setup / Ensure Models / Status |
 
 Worker: [worker/README.md](./worker/README.md)  
-Data root: `~/Embr/ml` (`EMBR_ML_ROOT`, under `~/Embr`) — see [docs/embr-home.md](./docs/embr-home.md)  
-Checklists: [docs/dev-phase1.md](./docs/dev-phase1.md) · [docs/dev-phase2.md](./docs/dev-phase2.md) · [docs/dev-phase3.md](./docs/dev-phase3.md) · [docs/dev-phase3-env.md](./docs/dev-phase3-env.md) · [docs/dev-phase4.md](./docs/dev-phase4.md) · [docs/dev-own-media.md](./docs/dev-own-media.md) · [docs/dev-matte-run.md](./docs/dev-matte-run.md)  
-Example job: [examples/phase2_job/](./examples/phase2_job/)
+Data root: `~/Embr/ml` — [docs/embr-home.md](./docs/embr-home.md)  
+操作手順: [docs/dev-matte-run.md](./docs/dev-matte-run.md)
 
 ## Documentation
 
 | Document | Contents |
 |----------|----------|
-| [docs/api/pybox.md](./docs/api/pybox.md) | Pybox API（embr-python-scripts から移植） |
-| [docs/reference/official-pybox-help/](./docs/reference/official-pybox-help/) | Flame 2025 公式 Help HTML |
-| [docs/research/sam2-matanyone2-pybox.md](./docs/research/sam2-matanyone2-pybox.md) | SAM2 + MatAnyone 2 調査と実装検討 |
-| [docs/dev-phase1.md](./docs/dev-phase1.md) | Phase 1 動作確認手順 |
-| [docs/dev-phase2.md](./docs/dev-phase2.md) | Phase 2 キャッシュ再生手順 |
-| [docs/dev-phase3.md](./docs/dev-phase3.md) | Phase 3 worker / Pybox Ensure Models |
-| [docs/dev-phase4.md](./docs/dev-phase4.md) | Phase 4 publish-cache → Batch 再生 |
+| [docs/dev-matte-run.md](./docs/dev-matte-run.md) | Embr Matte 操作 |
 | [docs/embr-home.md](./docs/embr-home.md) | `~/Embr` ランタイムレイアウト |
-| [docs/handoff-embr-runtime-install.md](./docs/handoff-embr-runtime-install.md) | python-scripts 向け Install 引き継ぎ（uv を Embr 下へ） |
-| [docs/dev-matte-run.md](./docs/dev-matte-run.md) | Embr Matte 非同期 Run / status.json |
-| [docs/dev-phase3-env.md](./docs/dev-phase3-env.md) | Phase 3 実行環境方針（インストール前） |
+| [docs/handoff-embr-runtime-install.md](./docs/handoff-embr-runtime-install.md) | python-scripts 向け Install 引き継ぎ |
+| [docs/dev-phase3.md](./docs/dev-phase3.md) | worker / Ensure Models |
+| [docs/dev-phase3-env.md](./docs/dev-phase3-env.md) | 実行環境方針 |
+| [docs/dev-own-media.md](./docs/dev-own-media.md) | 自前プレート＋マスク（CLI） |
+| [docs/api/pybox.md](./docs/api/pybox.md) | Pybox API メモ |
+| [docs/research/sam2-matanyone2-pybox.md](./docs/research/sam2-matanyone2-pybox.md) | SAM2 + MatAnyone2 調査 |
 
 ## Related
 

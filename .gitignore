@@ -14,8 +14,6 @@ uv.lock
 
 # Local ML data (never commit weights or job media)
 /embr-ml/
-examples/phase2_job/alpha/*.exr
-!examples/phase2_job/alpha/.gitkeep
 
 # Flame / temp
 *.log
